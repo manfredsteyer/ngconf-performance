@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)http://softwarearchitekt.at/downloads/ng/performance.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <style>
+/*--------------------------------------------------------------------------------------------- * Copyright (c) Microsoft Corporation. All rights reserved. * Licensed under the MIT License. See License.txt in the project root for license information. *--------------------------------------------------------------------------------------------*/ body { font-family: "Segoe WPC", "Segoe UI", "SFUIText-Light", "HelveticaNeue-Light", sans-serif, "Droid Sans Fallback"; font-size: 14px; padding: 0 12px; line-height: 22px; word-wrap: break-word; } body.scrollBeyondLastLine { margin-bottom: calc(100vh - 22px); } body.showEditorSelection .code-line { position: relative; } body.showEditorSelection .code-active-line:before, body.showEditorSelection .code-line:hover:before { content: ""; display: block; position: absolute; top: 0; left: -12px; height: 100%; } body.showEditorSelection li.code-active-line:before, body.showEditorSelection li.code-line:hover:before { left: -30px; } .vscode-light.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(0, 0, 0, 0.15); } .vscode-light.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(0, 0, 0, 0.40); } .vscode-dark.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 255, 255, 0.4); } .vscode-dark.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 255, 255, 0.60); } .vscode-high-contrast.showEditorSelection .code-active-line:before { border-left: 3px solid rgba(255, 160, 0, 0.7); } .vscode-high-contrast.showEditorSelection .code-line:hover:before { border-left: 3px solid rgba(255, 160, 0, 1); } img { max-width: 100%; max-height: 100%; } a { color: #4080D0; text-decoration: none; } a:focus, input:focus, select:focus, textarea:focus { outline: 1px solid -webkit-focus-ring-color; outline-offset: -1px; } hr { border: 0; height: 2px; border-bottom: 2px solid; } h1 { padding-bottom: 0.3em; line-height: 1.2; border-bottom-width: 1px; border-bottom-style: solid; } h1, h2, h3 { font-weight: normal; } h1 code, h2 code, h3 code, h4 code, h5 code, h6 code { font-size: inherit; line-height: auto; } a:hover { color: #4080D0; text-decoration: underline; } table { border-collapse: collapse; } table > thead > tr > th { text-align: left; border-bottom: 1px solid; } table > thead > tr > th, table > thead > tr > td, table > tbody > tr > th, table > tbody > tr > td { padding: 5px 10px; } table > tbody > tr + tr > td { border-top: 1px solid; } blockquote { margin: 0 7px 0 5px; padding: 0 16px 0 10px; border-left: 5px solid; } code { font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback"; font-size: 14px; line-height: 19px; } body.wordWrap pre { white-space: pre-wrap; } .mac code { font-size: 12px; line-height: 18px; } code > div { padding: 16px; border-radius: 3px; overflow: auto; } /** Theming */ .vscode-light { color: rgb(30, 30, 30); } .vscode-dark { color: #DDD; } .vscode-high-contrast { color: white; } .vscode-light code { color: #A31515; } .vscode-dark code { color: #D7BA7D; } .vscode-light code > div { background-color: rgba(220, 220, 220, 0.4); } .vscode-dark code > div { background-color: rgba(10, 10, 10, 0.4); } .vscode-high-contrast code > div { background-color: rgb(0, 0, 0); } .vscode-high-contrast h1 { border-color: rgb(0, 0, 0); } .vscode-light table > thead > tr > th { border-color: rgba(0, 0, 0, 0.69); } .vscode-dark table > thead > tr > th { border-color: rgba(255, 255, 255, 0.69); } .vscode-light h1, .vscode-light hr, .vscode-light table > tbody > tr + tr > td { border-color: rgba(0, 0, 0, 0.18); } .vscode-dark h1, .vscode-dark hr, .vscode-dark table > tbody > tr + tr > td { border-color: rgba(255, 255, 255, 0.18); } .vscode-light blockquote, .vscode-dark blockquote { background: rgba(127, 127, 127, 0.1); border-color: rgba(0, 122, 204, 0.5); } .vscode-high-contrast blockquote { background: transparent; border-color: #fff; }
+</style>
+<style>
+/* Tomorrow Theme */ /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */ /* Original theme - https://github.com/chriskempson/tomorrow-theme */ /* Tomorrow Comment */ .hljs-comment, .hljs-quote { color: #8e908c; } /* Tomorrow Red */ .hljs-variable, .hljs-template-variable, .hljs-tag, .hljs-name, .hljs-selector-id, .hljs-selector-class, .hljs-regexp, .hljs-deletion { color: #c82829; } /* Tomorrow Orange */ .hljs-number, .hljs-built_in, .hljs-builtin-name, .hljs-literal, .hljs-type, .hljs-params, .hljs-meta, .hljs-link { color: #f5871f; } /* Tomorrow Yellow */ .hljs-attribute { color: #eab700; } /* Tomorrow Green */ .hljs-string, .hljs-symbol, .hljs-bullet, .hljs-addition { color: #718c00; } /* Tomorrow Blue */ .hljs-title, .hljs-section { color: #4271ae; } /* Tomorrow Purple */ .hljs-keyword, .hljs-selector-tag { color: #8959a8; } .hljs { display: block; overflow-x: auto; color: #4d4d4c; padding: 0.5em; } .hljs-emphasis { font-style: italic; } .hljs-strong { font-weight: bold; }
+</style>
+<style>
+ul.contains-task-list { padding-left: 0; } ul ul.contains-task-list { padding-left: 40px; } .task-list-item { list-style-type: none; } .task-list-item-checkbox { vertical-align: middle; }
+</style>
+        <style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', 'HelveticaNeue-Light', 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 id="angular-performance-workshop">Angular Performance Workshop</h1>
+<ul>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#angular-performance-workshop">Angular Performance Workshop</a>
+<ul>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#getting-started">Getting Started</a>
+<ul>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#prerequisites">Prerequisites</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#get-the-starterkit">Get the Starterkit</a></li>
+</ul>
+</li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#lazy-loading">Lazy Loading</a>
+<ul>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#implementing-lazy-loading-for-a-feature-module">Implementing Lazy Loading for a feature module</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#implementing-preloading">Implementing Preloading</a></li>
+</ul>
+</li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#improving-startup-performance-with-aot">Improving Startup Performance with AOT</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#inspecting-bundles-with-webpack-bundle-analyzer">Inspecting Bundles with webpack-bundle-analyzer</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#improving-data-binding-performance-with-onpush">Improving Data Binding Performance with OnPush</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#bonus-caching-with-service-worker">Bonus: Caching with Service Worker **</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#bonus-server-side-rendering">Bonus: Server-Side Rendering **</a></li>
+<li><a href="http://softwarearchitekt.at/downloads/ng/performance.html#bonus-implementing-a-custom-preloading-strategy">Bonus: Implementing a Custom Preloading Strategy **</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="getting-started">Getting Started</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>For this lab you need:</p>
+<ul>
+<li>NodeJS in an current version (e. g. the current LTS version)</li>
+<li>Visual Studio Code or another editor with TypeScript support</li>
+<li>The Angular CLI (<code>npm i @angular/cli -g</code>)</li>
+<li>GIT</li>
+<li>Chrome</li>
+</ul>
+<p><strong>Hint:</strong> In Visual Studio Code, you can use <code>CTRL+P</code> to quickly jump between files. This comes in handy here, as you have to work with an existing project.</p>
+<h3 id="get-the-starterkit">Get the Starterkit</h3>
+<p>Follow the following steps to get the starter kit:</p>
+<ul>
+<li>
+<p>Clone the Repository at <a href="https://github.com/manfredsteyer/ngconf-performance">https://github.com/manfredsteyer/ngconf-performance</a> and <code>npm install</code> the dependencies:</p>
+<pre><code>git clone https://github.com/manfredsteyer/ngconf-performance
+cd ngconf-performance
+npm install
+</code></pre>
+</li>
+<li>
+<p><strong>Fallback:</strong> <strong>If, and only if,</strong> you have any issues with git or npm, just download the starterkit as a zip file <a href="https://drive.google.com/file/d/19fB8f3X2PYPtLbkj74zEIQGU0t4uUCzb/view?usp=sharing">here</a>. If you are working with Mac OS X or Linux, you might set the <code>x</code> flag for every file in the folder <code>node_modules/.bin</code> using <code>chmod +x *</code>.</p>
+</li>
+<li>
+<p>Start your starter kit using <code>npm start</code>.</p>
+</li>
+<li>
+<p>Open the project in the browser at <code>localhost:4200</code>.</p>
+</li>
+</ul>
+<h2 id="lazy-loading">Lazy Loading</h2>
+<h3 id="implementing-lazy-loading-for-a-feature-module">Implementing Lazy Loading for a feature module</h3>
+<p>Implement lazy loading for the <code>FlightBookingModule</code> in your <code>app.routing.ts</code>.
+Keep in mind that lazy loading only works if the module in question isn't referenced directly but only with a string in the router configuration.</p>
+<ol>
+<li>
+<p>Open the file <code>app.module.ts</code> and remove the import for the <code>FlightBookingModule</code>.</p>
+ <details>
+ <summary>Show Code</summary>
+ <p>
+</p><pre class="hljs"><code><div><span class="hljs-comment">// apps/flight-app/src/app/flight-booking/flight-booking.module.ts</span>
+
+@NgModule({
+    imports: [
+        [...]
+        <span class="hljs-comment">// FlightBookingModule, </span>
+        <span class="hljs-comment">// ^^ Removed b/c this would prevent lazy loading</span>
+        [...]
+    ],
+    [...]        
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule { }
+</div></code></pre>
+ <p></p>
+ </details>
+</li>
+<li>
+<p>Open the file <code>app.module.ts</code> and introduce a route with the path <code>flight-booking</code>.
+It should point to the <code>FlightBookingModule</code> using <code>loadChildren</code>:</p>
+ <details>
+ <summary>Show Code</summary>
+ <p>
+</p><pre class="hljs"><code><div><span class="hljs-comment">// apps/flight-app/src/app/app.module.ts</span>
+
+[...]
+{
+    path: <span class="hljs-string">'flight-booking'</span>,
+    loadChildren: <span class="hljs-string">'./flight-booking/flight-booking.module#FlightBookingModule'</span>
+},
+[...]
+</div></code></pre>
+ <p></p>
+ </details>
+</li>
+<li>
+<p>Open the file <code>flight-booking.routes.ts</code> and change the path for the first route to an empty string (<code>path: ''</code>) to make this route the default route that is activated after lazy loading the module.</p>
+<p>Also introduce a default child route that redirects to the route <code>flight-search</code>:</p>
+ <details>
+ <summary>Show Code</summary>
+ <p>
+</p><pre class="hljs"><code><div>
+<span class="hljs-keyword">const</span> FLIGHT_BOOKING_ROUTES: Routes = [
+{
+    path: <span class="hljs-string">''</span>,
+    component: FlightBookingComponent,
+    [...],
+    children: [
+        {
+            path: <span class="hljs-string">''</span>,
+            redirectTo: <span class="hljs-string">'flight-search'</span>,
+            pathMatch: <span class="hljs-string">'full'</span>
+        },
+        <span class="hljs-comment">// All the other routes go here!</span>
+        [...]
+    ]
+}
+];
+[...]
+</div></code></pre>
+</details></li>
+</ol>
+<p></p>
+
+<ol start="5">
+<li>
+<p>Find out that webpack splits off an own chunk for the <code>FlightBookingModule</code> after implementing lazy loading.
+If this works, you will see another chunk at the console (e. g. <code>some-number.chunk.js</code> or <code>flight-booking.module.chunk.js</code> depending on the used version of the CLI)</p>
+</li>
+<li>
+<p>Try it out in the browser and use the network tab within the dev tools (F12) to make sure that it is only loaded on demand.
+If it doesn't work, have a look to the console tab within the dev tools.</p>
+</li>
+</ol>
+<h3 id="implementing-preloading">Implementing Preloading</h3>
+<p>In this exercise you will implement Preloading using Angular's <code>PreloadAllModules</code> strategy.</p>
+<ol>
+<li>
+<p>Open the file <code>app.module.ts</code> and register the <code>PreloadAllModules</code> strategy when calling <code>RouterModule.forRoot</code>.</p>
+ <details>
+ <summary>Show Code</summary>
+ <p>
+</p><pre class="hljs"><code><div>RouterModule.forRoot(APP_ROUTES, {
+    preloadingStrategy: PreloadAllModules
+});
+</div></code></pre>
+ <p></p>
+ </details>
+</li>
+<li>
+<p>Make sure it works using the network tab within Chrome's dev tools. If it works, the lazy bundles are loaded <strong>after</strong> the app has been initializes. If this is the case, the chunks show up quite late in the water fall diagram.</p>
+</li>
+</ol>
+<h2 id="improving-startup-performance-with-aot">Improving Startup Performance with AOT</h2>
+<p>In this exercise you will create a production build with and another production build without AOT. After this you will compare the bundle sizes.</p>
+<ol>
+<li>
+<p>Install the simple web server live-server:</p>
+<pre><code>npm install live-server -g
+</code></pre>
+</li>
+<li>
+<p>Switch to the console and move to the root folder of your project. Create a production build <strong>without AOT</strong> of your solution:</p>
+<pre><code>ng build --prod --aot=false
+</code></pre>
+</li>
+<li>
+<p>Switch to your <code>dist/apps/flight-app</code> folder and start live-server:</p>
+<pre><code>live-server --entry-file=index.html
+</code></pre>
+<p>The usage of <code>--entry-file</code> is necessary because of the usage of the History API for routing.</p>
+</li>
+<li>
+<p>Open the performance tab in Chrome's dev tools and reload the app. Find out how long bootstrapping takes and create a screenshot.</p>
+<p>Find out how long it took until the first meaningful paint took happen (first vertical bar) and find out how long it took the browser to execute all scripts on startup ('yellow task'). The latter one includes the work of the JIT compiler.</p>
+<p><strong>Hint:</strong> In order to respect the cache, do it twice and take the screenshot after the 2nd try.</p>
+</li>
+<li>
+<p>Note the sizes of your bundles within the <code>dist</code> folder.</p>
+</li>
+<li>
+<p>Switch to the root folder of your project. Create an AOT based production build:</p>
+<pre><code>ng build --prod
+</code></pre>
+</li>
+<li>
+<p>Measure the time needed for bootstrapping again and compare the results.</p>
+</li>
+<li>
+<p>Compare your bundle sizes within the <code>dist</code> folder with the bundles sizes of the previous production build.</p>
+</li>
+</ol>
+<h2 id="inspecting-bundles-with-webpack-bundle-analyzer">Inspecting Bundles with webpack-bundle-analyzer</h2>
+<p>Using the webpack-bundle-analyzer one can have a look at a bundle's content. In this exercise you will use this possibility by inspecting your AOT-based and your AOT-less production build.</p>
+<ol>
+<li>
+<p>Install the <code>webpack-bundle-analyzer</code> globally (for the sake of simplicity):</p>
+<pre><code>npm install -g webpack-bundle-analyzer
+</code></pre>
+</li>
+<li>
+<p>Move to the root folder of your project. Create a Production Build without AOT and generate a statistics file for the anaylzer using the <code>stats-json</code> flag:</p>
+<pre><code>ng build --prod --aot=false --stats-json
+</code></pre>
+</li>
+<li>
+<p>Analyze your bundles:</p>
+<pre><code>cd dist/apps/flight-app
+webpack-bundle-analyzer stats.json
+</code></pre>
+</li>
+<li>
+<p>Take a screen shot to document this.</p>
+</li>
+<li>
+<p>Move to the root folder of your project. Create a production build using AOT:</p>
+<pre><code>ng build --prod --stats-json
+</code></pre>
+</li>
+<li>
+<p>Analyze these bundles too and compare it to the former bundles:</p>
+<pre><code>cd dist/apps/flight-app
+webpack-bundle-analyzer stats.json
+</code></pre>
+</li>
+</ol>
+<h2 id="improving-data-binding-performance-with-onpush">Improving Data Binding Performance with OnPush</h2>
+<ol>
+<li>
+<p>Open the file <code>flight-search.component.ts</code> and discover the <code>FlightSearchComponent</code>.
+Have a look to the method <code>Delay 1st Flight</code>.</p>
+</li>
+<li>
+<p>Look into the called method <code>this.flightService.addDelay</code> (e. g. by selecting it and pressing F12 in Visual Studio Code) and find out that the modification is done in an <strong>mutable</strong> way.</p>
+</li>
+<li>
+<p>Open the file <code>flight-card.component.ts</code> and add have a look to the <code>blink</code> method.</p>
+</li>
+<li>
+<p>Move to the file <code>flight-card.component.html</code> and create a data binding for this method at the end:</p>
+<pre><code>{{ blink() }}
+</code></pre>
+<p>Please note that binding methods is not a good idea with respect to performance. We do it here just to visualize the change tracker.</p>
+</li>
+<li>
+<p>Open the solution in the browser and search for flights form <code>Hamburg</code> to <code>Graz</code>.</p>
+</li>
+<li>
+<p>Click the button <code>Delay 1st Flight</code> and see that just the first flight gets a new date. But you also see that every component is checked for changes by Angular b/c every component blinks.</p>
+</li>
+<li>
+<p>Open the file <code>flight-card.component.ts</code>. Switch on <code>OnPush</code> for your <code>FlightCard</code>.</p>
+ <details>
+ <summary>Show Code</summary>
+ <p>
+</p><pre class="hljs"><code><div><span class="hljs-keyword">import</span> {ChangeDetectionStrategy} from <span class="hljs-string">'@angular/core'</span>;
+[...]
+@Component({
+    selector: <span class="hljs-string">'flight-card'</span>,
+    templateUrl: <span class="hljs-string">'flight-card.component.html'</span>,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> FlightCardComponent {
+    [...]
+}
+</div></code></pre>
+ <p></p>
+ </details>
+</li>
+<li>
+<p>Open the <code>flight.service.ts</code> and alter it to update the selected flight's date in an <em>immutable</em> way:</p>
+<details>
+<summary>Show Code</summary>
+<p>
+</p><pre class="hljs"><code><div>
+delay() {
+    <span class="hljs-keyword">const</span> ONE_MINUTE = <span class="hljs-number">1000</span> * <span class="hljs-number">60</span>;
+
+    <span class="hljs-keyword">let</span> oldFlights = <span class="hljs-keyword">this</span>.flights;
+    <span class="hljs-keyword">let</span> oldFlight = oldFlights[<span class="hljs-number">0</span>];
+    <span class="hljs-keyword">let</span> oldDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(oldFlight.date);
+    
+    <span class="hljs-comment">// Mutable</span>
+    <span class="hljs-comment">// oldDate.setTime(oldDate.getTime() + 15 * ONE_MINUTE );</span>
+    <span class="hljs-comment">// oldFlight.date = oldDate.toISOString();</span>
+
+    <span class="hljs-comment">// Immutable</span>
+    <span class="hljs-keyword">let</span> newDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(oldDate.getTime() + <span class="hljs-number">15</span> * ONE_MINUTE);
+    <span class="hljs-keyword">let</span> newFlight: Flight = { ...oldFlight, date: newDate.toISOString() };
+    <span class="hljs-keyword">let</span> newFlights = [ newFlight, ...oldFlights.slice(<span class="hljs-number">1</span>) ]
+    <span class="hljs-keyword">this</span>.flights = newFlights;
+
+}
+</div></code></pre>
+<p></p>
+</details>
+<p>If you haven't worked with the object spread operator (e. g. <code>...oldFlight</code>), you find some information about it <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html">here</a> (scroll down to Object Spread) and about the array spread operator (e. g. [newFlight, ...oldFlights.slice(1)]) <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator">here</a>.</p>
+</li>
+<li>
+<p>Make sure your implementation works. Switch to the browser and search for flights again. Click <code>Delay 1st Flight</code> one more time and find out that Angular is just checking and updating the first flight card.</p>
+</li>
+</ol>
+<h2 id="bonus--caching-with-service-worker">Bonus: Caching with Service Worker **</h2>
+<ol>
+<li>
+<p>Install the service worker package:</p>
+<pre><code>npm i @angular/service-worker --save-dev
+</code></pre>
+<p>Ignore peer dependency warnings.</p>
+</li>
+<li>
+<p>Set the flag for service worker in your <code>.angular-cli.json</code>. Use the cli: <code>ng set apps.0.serviceWorker=true</code>.</p>
+<p>This flag makes the CLI to copy the Angular Service Worker into the <code>dist</code> folder when building for production.</p>
+</li>
+</ol>
+<!-- 
+2. Because of a bug in the current version, copy the file ``ngsw-worker.old.js`` into your ``src`` folder and register it with the assets array in your ``.angular-cli.json`` to make sure it is copied over to your distribution folder:
+
+    ```json
+    "assets": [
+        "assets",
+        "favicon.ico",
+        "ngsw-worker.old.js"
+    ],
+    ```
+-->
+<ol start="3">
+<li>
+<p>Import and register the service worker module in <code>app.module.ts</code>:</p>
+<pre class="hljs"><code><div>[...]
+imports: [
+    ServiceWorkerModule.register(<span class="hljs-string">'/ngsw-worker.js'</span>, {enabled: environment.production})
+]
+[...]
+</div></code></pre>
+</li>
+<li>
+<p>Setup a file named <code>ngsw-config.json</code> in <code>apps/flight-app/src</code> and insert the following content.</p>
+<p>This configuration tells the Angular Service Worker which files to cache.</p>
+<pre class="hljs"><code><div>{
+    <span class="hljs-attr">"index"</span>:<span class="hljs-string">"/index.html"</span>,
+    <span class="hljs-attr">"assetGroups"</span>:[
+        {
+            <span class="hljs-attr">"name"</span>:<span class="hljs-string">"app"</span>,
+            <span class="hljs-attr">"installMode"</span>:<span class="hljs-string">"prefetch"</span>,
+            <span class="hljs-attr">"resources"</span>:{
+                <span class="hljs-attr">"files"</span>:[
+                    <span class="hljs-string">"/favicon.ico"</span>,
+                    <span class="hljs-string">"/index.html"</span>
+                ],
+                <span class="hljs-attr">"versionedFiles"</span>:[
+                    <span class="hljs-string">"/*.bundle.css"</span>,
+                    <span class="hljs-string">"/*.bundle.js"</span>,
+                    <span class="hljs-string">"/*.chunk.js"</span>
+                ]
+            }
+        },
+        {
+            <span class="hljs-attr">"name"</span>:<span class="hljs-string">"assets"</span>,
+            <span class="hljs-attr">"installMode"</span>:<span class="hljs-string">"lazy"</span>,
+            <span class="hljs-attr">"updateMode"</span>:<span class="hljs-string">"prefetch"</span>,
+            <span class="hljs-attr">"resources"</span>:{
+                <span class="hljs-attr">"files"</span>:[
+                    <span class="hljs-string">"/assets/**"</span>
+                ]
+            }
+        }
+    ]
+}
+</div></code></pre>
+</li>
+<li>
+<p>Build your app for production:</p>
+<pre><code>ng build --prod
+</code></pre>
+</li>
+<li>
+<p>Install <code>http-server</code>, which is a simple web server.</p>
+<pre><code>npm i -g http-server
+</code></pre>
+<p>Unfortunately, for testing this you cannot use <code>live-server</code> because it changes your <code>index.html</code>. As Angular Service Worker checks the hash codes of cashed files it would detect an unknown file state and stop working.</p>
+</li>
+<li>
+<p>Switch into the <code>dist</code> folder of your app <code>cd dist/apps/flight-app</code> and serve it <code>http-server -o</code></p>
+</li>
+<li>
+<p>Test your app.</p>
+</li>
+<li>
+<p>Open the developer console in your browser (F12) and activate simulate offline or slow 3G using the network tab.</p>
+</li>
+<li>
+<p>Reload the application. It should even work in offline mode with the same performance as before and you should get similar results when simulating slow 3G.</p>
+</li>
+<li>
+<p><strong>IMPORTANT CLEAN-UP TASK</strong>: To prevent caching for further exercises, do the following:</p>
+<ul>
+<li>Switch to the above dialog within the dev tools (F12 | Application | Service Worker) and click <code>unregister</code>.</li>
+<li>Delete the file <code>src\ngsw-config.json</code>.</li>
+<li>Remove <code>ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production})</code> from your <code>app.module.ts</code> file.</li>
+<li>In your <code>.angular-cli.json</code> set the flag <code>serviceWorker</code> to false.</li>
+</ul>
+</li>
+</ol>
+<h2 id="bonus--server-side-rendering">Bonus: Server-Side Rendering **</h2>
+<ol>
+<li>Close the following repository:</li>
+</ol>
+<pre><code>git clone https://github.com/angular/universal-starter
+cd universal
+npm i
+</code></pre>
+<ol start="2">
+<li>
+<p><strong>Fallback</strong>: <strong>If, and only, if</strong> you have troubles with git or npm, download the project as a zip file <a href="https://drive.google.com/file/d/1prwAu39Stgven-CtgusQaoowBQYp2r2J/view?usp=sharing">here</a>.</p>
+</li>
+<li>
+<p>Implement a new service <code>env.service.ts</code> in <code>app/services</code> with following content:</p>
+</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> EnvService {
+    <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">get</span> env(): <span class="hljs-built_in">string</span>;
+}
+</div></code></pre>
+<ol start="2">
+<li>Implement a new service <code>client.service.ts</code> in <code>app/services</code>:</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> { EnvService } from <span class="hljs-string">'./env.service'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ClientEnvService <span class="hljs-keyword">implements</span> EnvService {
+    <span class="hljs-keyword">get</span> env(): <span class="hljs-built_in">string</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"Client!"</span>;
+    }
+}
+</div></code></pre>
+<ol start="3">
+<li>Implement a new service <code>server.service.ts</code> in <code>app/services</code>:</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> { EnvService } from <span class="hljs-string">'./env.service'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ClientEnvService <span class="hljs-keyword">implements</span> EnvService {
+    <span class="hljs-keyword">get</span> env(): <span class="hljs-built_in">string</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"Server!"</span>;
+    }
+}
+</div></code></pre>
+<ol start="4">
+<li>In <code>app.module.ts</code> insert following:</li>
+</ol>
+<pre class="hljs"><code><div> providers: [{ provide: EnvService, useClass: ClientEnvService }]
+</div></code></pre>
+<ol start="5">
+<li>In <code>app.server.module.ts</code> insert following:</li>
+</ol>
+<pre class="hljs"><code><div> providers: [{ provide: EnvService, useClass: ServerEnvService }]
+</div></code></pre>
+<ol start="6">
+<li>Add this to the <code>app.component.html</code>:</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Env: <span class="hljs-tag">&lt;<span class="hljs-name">b</span>&gt;</span>{{env}}<span class="hljs-tag">&lt;/<span class="hljs-name">b</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</div></code></pre>
+<ol start="7">
+<li>Add this to the <code>app.component.ts</code>:</li>
+</ol>
+<pre class="hljs"><code><div> env: <span class="hljs-built_in">string</span>;
+ <span class="hljs-keyword">constructor</span>(private envService: EnvService) {
+   <span class="hljs-keyword">this</span>.env = envService.env;
+ }
+</div></code></pre>
+<ol start="7">
+<li>
+<p>Run <code>npm run build:ssr</code> to build your project for server side rendering.</p>
+</li>
+<li>
+<p>Run <code>npm run serve:ssr</code> to start your project.</p>
+</li>
+<li>
+<p>Open the application by browsing to <a href="http://localhost:4000/">http://localhost:4000</a></p>
+</li>
+<li>
+<p>Throttle your Browser to <code>Slow 3G</code> using the Dev Tools and test your application.</p>
+</li>
+</ol>
+<h2 id="bonus--implementing-a-custom-preloading-strategy">Bonus: Implementing a Custom Preloading Strategy **</h2>
+<ol>
+<li>
+<p><a href="https://softwarearchitekt.at/post/2016/10/02/optimizing-performance-with-preloading-and-the-new-angular-router.aspx">Here</a> you find some information about creating a custom preloading strategy. Have a look at it.</p>
+</li>
+<li>
+<p>Create a custom preloading strategy that only preloads modules that have been marked with the <code>data</code> attribute in the router configuration.</p>
+</li>
+<li>
+<p>Configure the system to make use of it and test it.</p>
+</li>
+</ol>
+
+    
+    </body></html>
